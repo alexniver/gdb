@@ -38,20 +38,46 @@ func Save(gdb Gdb) error {
 	return nil
 }
 
-func All(path string) []Gdb {
+func SaveAll(gdbArr []Gdb) error {
+	for _, gdb := range gdbArr {
+		err := Save(gdb)
+		if nil != err {
+			return err
+		}
+	}
 	return nil
 }
 
-func AllTableName(path string) []string {
+func One(path, tableName string, v interface{}) error{
+	vPath := filepath.Join(path, tableName)
+	buf, err := ioutil.ReadFile(vPath)
+	if nil != err {
+		return err
+	}
+
+	err = gtools.DecodeUnGzip(buf, v)
+	if nil != err {
+		return err
+	}
 	return nil
 }
 
-func One(path, tableName string) Gdb {
-	return nil
+
+func AllTableName(path string) ([]string, error) {
+	var result []string
+	files, err := ioutil.ReadDir(path)
+	if nil != err {
+		return nil, err
+	}
+	for _, f := range files {
+		result = append(result, f.Name())
+	}
+	return result, nil
 }
+
 
 func Del(path, tableName string) error {
-	return nil
+	return os.Remove(filepath.Join(path, tableName))
 }
 
 
