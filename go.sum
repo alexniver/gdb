@@ -1,3 +1,7 @@
 github.com/alexniver/gtools v0.0.2 h1:6u1fI5DD5lrCSGHQHsA5VhqVrlm8tlDueRleJkCQnXY=
 github.com/alexniver/gtools v0.0.2/go.mod h1:SEj2Ikf9eyaNxeLqJx5W4iPN5148jzeqZILgQ2BIqCw=
+github.com/alexniver/gtools v0.0.3 h1:INSgKc7ZfGXxAOsFMDBb8CyqNmIlGZGVKwpfnudwMy4=
+github.com/alexniver/gtools v0.0.3/go.mod h1:SEj2Ikf9eyaNxeLqJx5W4iPN5148jzeqZILgQ2BIqCw=
+github.com/alexniver/gtools v0.0.4 h1:vdSxh6Pm0tV4vMQvjf+Rd67gbo5uyGN8mUk3nFiFviM=
+github.com/alexniver/gtools v0.0.4/go.mod h1:SEj2Ikf9eyaNxeLqJx5W4iPN5148jzeqZILgQ2BIqCw=
 github.com/fatih/structs v1.1.0/go.mod h1:9NiDSp5zOcgEDl+j00MP/WkGVPOlPRLejGD8Ga6PJ7M=

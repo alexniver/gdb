@@ -3,28 +3,25 @@ package gdb
 import (
 	"fmt"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"testing"
 )
 
-var BasePath = "/tmp/gdbtest/"
 
 type Table1 struct {
 	Id int
 	Name string
 }
 
-func (t *Table1) Path() string {
-	return filepath.Join(BasePath, "table1")
-}
-
-func (t *Table1) TableName() string {
+func (t *Table1) Key() string {
 	return strconv.Itoa(t.Id)
 }
 
 
 
 func TestSave(t *testing.T) {
+	Init(string(filepath.Separator), "tmp", "gdbtest")
 	t1 := &Table1{
 		Id:1,
 		Name:"a table",
@@ -37,6 +34,8 @@ func TestSave(t *testing.T) {
 }
 
 func TestSaveAll(t *testing.T) {
+	Init(string(filepath.Separator), "tmp", "gdbtest")
+
 	var gdbArr []Gdb
 
 	for i := 0; i < 10; i ++ {
@@ -55,25 +54,30 @@ func TestSaveAll(t *testing.T) {
 
 
 func TestOne(t *testing.T) {
-	var t1 Table1
-	err := One(t1.Path(), "1", &t1)
+	Init(string(filepath.Separator), "tmp", "gdbtest")
+	t1, err := One("2", reflect.TypeOf((*Table1)(nil)))
 	if nil != err {
-		t.Errorf("TestOne error")
+		t.Errorf("TestOne error %+v", err)
 	}
-	fmt.Printf("+%v", t1)
+	fmt.Printf("%+v\n", *t1.(**Table1))
 }
 
-func TestAllTableName(t *testing.T) {
-	var t1 Table1
-	names, err := AllTableName(t1.Path())
+func TestAll(t *testing.T) {
+	Init(string(filepath.Separator), "tmp", "gdbtest")
+
+	allInter, err := All(reflect.TypeOf((*Table1)(nil)))
 	if nil != err {
-		t.Errorf("TestAllTableName error %+v", err)
+		t.Errorf("TestAll error %+v", err)
 	}
-	fmt.Printf("%+v", names)
+	for _, v := range allInter {
+		vv := v.(**Table1)
+		fmt.Println(*vv)
+	}
 }
 
 func TestDel(t *testing.T) {
-	err := Del(filepath.Join(BasePath, "table1"), "1")
+	Init(string(filepath.Separator), "tmp", "gdbtest")
+	err := Del("1", reflect.TypeOf((*Table1)(nil)))
 	if nil != err {
 		t.Errorf("TestDel error %+v", err)
 	}
