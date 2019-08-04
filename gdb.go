@@ -143,6 +143,10 @@ func Del(key string, t reflect.Type) error {
 	mux.Lock()
 	defer mux.Unlock()
 
+	if dbPath == "" {
+		return ErrorNeedInit
+	}
+
 	return os.Remove(filepath.Join(dbPath, gtools.TypeName(t), key))
 }
 
