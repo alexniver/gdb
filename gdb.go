@@ -103,8 +103,13 @@ func one(key string, t reflect.Type) (interface{}, error) {
 		return nil, err
 	}
 
-	v := reflect.New(t).Interface()
-	err = gtools.DecodeUnGzip(buf, &v)
+	var finalT = t
+	if t.Kind() == reflect.Ptr {
+		finalT = t.Elem()
+	}
+
+	v := reflect.New(finalT).Interface()
+	err = gtools.DecodeUnGzip(buf, v)
 	if nil != err {
 		return nil, err
 	}
