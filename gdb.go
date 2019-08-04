@@ -21,18 +21,19 @@ var (
 
 /*
 	Gdb 接口
-	需要实现2个方法
-	Path() 方法代表存储的路径名
-	TableName() 方法代表存储的文件名
+	需要实现1个方法
+	Key() struct 存储的最终文件名,需要保证唯一性
  */
 type Gdb interface {
 	Key() string
 }
 
+// Init dirs, 设置要目录，以逗号分开
 func Init(dirs ...string) {
 	dbPath = filepath.Join(dirs...)
 }
 
+// Save 保存
 func Save(gdb Gdb) error {
 	mux.Lock()
 	defer mux.Unlock()
