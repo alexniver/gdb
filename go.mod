@@ -1,4 +1,4 @@
-module gdb
+module github.com/alexniver/gdb
 
 go 1.12
 
