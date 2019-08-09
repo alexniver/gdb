@@ -28,6 +28,25 @@ func (t Table2) Key() string {
 }
 
 
+type Parent struct {
+	Id int
+	Name string
+}
+
+func (p *Parent) Key() string {
+	return strconv.Itoa(p.Id)
+}
+
+type Child struct {
+	Id int
+	PId int
+	Name string
+}
+
+func (c *Child) Key() string {
+	return strconv.Itoa(c.Id)
+}
+
 
 
 func TestSave(t *testing.T) {
@@ -48,6 +67,29 @@ func TestSave(t *testing.T) {
 	err = Save(t2)
 	if nil != err {
 		t.Errorf("Save got a error, err : %+v", err)
+	}
+
+
+	// test subPath,
+	p := &Parent{
+		Id:1,
+		Name: "parent",
+	}
+
+	c := &Child{
+		Id:1,
+		Name:"child",
+		PId:1,
+	}
+
+	err = Save(p, strconv.Itoa(p.Id))
+	if nil != err {
+		t.Error(err)
+	}
+
+	err = Save(c, strconv.Itoa(c.PId))
+	if nil != err {
+		t.Error(err)
 	}
 
 }
@@ -78,6 +120,53 @@ func TestSaveAll(t *testing.T) {
 	if nil != err {
 		t.Errorf("TestSaveAll error %+v", err)
 	}
+
+	// test subPath,
+	p1 := &Parent{
+		Id:1,
+		Name: "parent",
+	}
+
+	p2 := &Parent{
+		Id:2,
+		Name: "parent",
+	}
+
+
+	err = Save(p1, strconv.Itoa(p1.Id))
+	if nil != err {
+		t.Error(err)
+	}
+
+
+	err = Save(p2, strconv.Itoa(p2.Id))
+	if nil != err {
+		t.Error(err)
+	}
+
+	var child1Arr []Gdb
+	for i := 0; i < 10; i ++ {
+		c := &Child{
+			Id: i,
+			Name: "c" + strconv.Itoa(i),
+			PId:p1.Id,
+		}
+		child1Arr = append(child1Arr, c)
+	}
+
+	err = SaveAll(child1Arr, strconv.Itoa(p1.Id))
+
+	var child2Arr []Gdb
+	for i := 0; i < 10; i ++ {
+		c := &Child{
+			Id: i,
+			Name: "c" + strconv.Itoa(i),
+			PId:p2.Id,
+		}
+		child2Arr = append(child2Arr, c)
+	}
+
+	err = SaveAll(child2Arr, strconv.Itoa(p2.Id))
 }
 
 
@@ -94,6 +183,22 @@ func TestOne(t *testing.T) {
 		t.Errorf("TestOne error %+v", err)
 	}
 	fmt.Printf("%+v\n", t2.(*Table2))
+
+
+	// test subPath
+	pIdStr := "1"
+	p1, err := One(pIdStr, reflect.TypeOf((*Parent)(nil)), pIdStr)
+	if nil != err {
+		t.Errorf("TestOne error %+v", err)
+	}
+	fmt.Printf("%+v\n", p1.(*Parent))
+	c2, err := One("2", reflect.TypeOf((*Child)(nil)), pIdStr)
+	if nil != err {
+		t.Errorf("TestOne error %+v", err)
+	}
+	fmt.Printf("%+v\n", c2.(*Child))
+
+
 }
 
 func TestAll(t *testing.T) {
@@ -114,6 +219,17 @@ func TestAll(t *testing.T) {
 	for _, v := range allInter {
 		fmt.Println(*(v.(*Table2)))
 	}
+
+	// test subPath
+
+	p1IdStr := "1"
+	allInter, err = All(reflect.TypeOf((*Child)(nil)), p1IdStr)
+	if nil != err {
+		t.Errorf("TestAll error %+v", err)
+	}
+	for _, v := range allInter {
+		fmt.Println(*(v.(*Child)))
+	}
 }
 
 func TestDel(t *testing.T) {
@@ -126,4 +242,16 @@ func TestDel(t *testing.T) {
 	if nil != err {
 		t.Errorf("TestDel error %+v", err)
 	}
+
+	// test subPath
+
+	pIdStr := "1"
+	err = Del("1", reflect.TypeOf((*Child)(nil)), pIdStr)
+	if nil != err {
+		t.Errorf("TestDel error %+v", err)
+	}
+
 }
+
+
+
