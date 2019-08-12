@@ -163,4 +163,21 @@ func Del(key string, t reflect.Type, subPath ...string) error {
 	return os.Remove(path)
 }
 
+// AllSubPath 根目录下的所有子目录
+func AllSubPath() ([]string, error) {
+	if dbPath == "" {
+		return nil, ErrorNeedInit
+	}
 
+	var result []string
+	files, err := ioutil.ReadDir(dbPath)
+	if nil != err {
+		return nil, err
+	}
+
+	for _, f := range files {
+		result = append(result, f.Name())
+	}
+
+	return result, nil
+}

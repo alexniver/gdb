@@ -254,4 +254,13 @@ func TestDel(t *testing.T) {
 }
 
 
+func TestAllSubPath(t *testing.T) {
+	Init(string(filepath.Separator), "tmp", "gdbtest")
+	subPaths, err := AllSubPath()
+	if nil != err {
+		t.Errorf("Test AllSubPath error %+v", err)
+	}
+
+	fmt.Println(subPaths)
+}
 
